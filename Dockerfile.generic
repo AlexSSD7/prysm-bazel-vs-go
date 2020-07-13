@@ -1,0 +1,11 @@
+FROM golang:alpine
+
+# Install deps
+RUN apk add git build-base linux-headers
+
+# Clone and build prysm
+RUN apk add git; \
+    git clone https://github.com/prysmaticlabs/prysm --no-tags --single-branch; \
+    cd prysm/beacon-chain && go build; \
+    cd ../validator && go build
+

@@ -1,0 +1,17 @@
+FROM ubuntu:latest
+
+# Install bazel
+RUN set -u; \
+    apt update; \
+    apt install -y curl gnupg git python; \
+    curl https://bazel.build/bazel-release.pub.gpg | apt-key add -; \
+    echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list; \
+    apt update; \
+    apt install -y bazel-3.2.0
+
+
+# Clone and build prysm
+RUN git clone https://github.com/prysmaticlabs/prysm --no-tags --single-branch; \
+    cd prysm; \
+    bazel-3.2.0 build //beacon-chain:beacon-chain; \
+    bazel-3.2.0 build //validator:validator
